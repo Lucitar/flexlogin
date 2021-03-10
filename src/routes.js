@@ -9,6 +9,7 @@ router = express.Router()
 // Métodos GET
 
 router.get('/', async(req, res) => {
+
 	res.render('../pages/index')
 })
 

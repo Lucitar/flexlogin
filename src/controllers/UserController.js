@@ -3,6 +3,7 @@ const connection = dbtools.sequelize()
 const QueryTypes = dbtools.QueryTypes()
 
 const bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
 
 
 class UserController {
@@ -25,14 +26,21 @@ class UserController {
 
     async login(req, res){
         try{
-            var nomelogin = req.body.nome;
-            var senhalogin = req.body.senha;
+            let nomelogin = req.body.nome;
+            let senhalogin = req.body.senha;
+            console.log(req.body)
             const userhash = await connection.query(`SELECT * FROM usuarios WHERE nome = '${nomelogin}'`, { type: QueryTypes.SELECT });
-            
+            console.log(userhash)
             await bcrypt.compare(senhalogin, userhash[0].senha, function(err, result) {
                 if(result==true){
                     console.log("logado")
-                    res.redirect('../home')
+
+                    var token = jwt.sign({
+                        nomelogin:  req.body.nome,
+                        senhalogin:  req.body.senha
+                    }, 'segredo', {expiresIn: '1h'});
+                    req.auth = token
+                    res.status(200).json({"access_token": token})
                 }else{
                     console.log("não logado")
                     res.redirect('../semlogin')
