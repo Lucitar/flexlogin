@@ -12,13 +12,14 @@ class UserController {
             let nome = req.body.nome;
             let senha = req.body.senha;
             let salto = 10;
-    
+            let user;
+
             await bcrypt.genSalt(salto, function(err, salt) {
                 bcrypt.hash(senha, salt, function(err, hash) {
-                    connection.query(`INSERT INTO usuarios (nome, senha) VALUES ('${nome}', '${hash}')`);
+                    user = connection.query(`INSERT INTO usuarios (nome, senha) VALUES ('${nome}', '${hash}')`);
                 });
             });
-            return res.status(201)
+            res.status(201).json({user})
         } catch (error) {
             console.error(error);
         }
@@ -46,6 +47,16 @@ class UserController {
                     res.redirect('../semlogin')
                 }
             });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async show(req, res){
+        try{
+            
+            const users = await connection.query(`SELECT * FROM usuarios`, { type: QueryTypes.SELECT });
+            res.status(200).json({users})
         } catch (error) {
             console.error(error);
         }

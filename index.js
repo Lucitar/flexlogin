@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const expressJWT = require('express-jwt')
 app.use(
     expressJWT({secret: 'segredo', requestProperty: 'auth', algorithms: ['HS256']})
-    .unless({path: ['/', '/login', './semlogin', '/register']})
+    .unless({path: ['/', '/login', '/semlogin', '/register']})
 )
 
 app.set('view engine', 'ejs')

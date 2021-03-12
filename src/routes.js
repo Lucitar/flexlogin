@@ -25,11 +25,11 @@ router.get('/home', (req, res) => {
 	res.render('../pages/home')
 })
 
-// Sem sistema de sessão :(
-
 router.get('/semlogin', (req, res) => {
 	res.send('sai daqui >:[')
 })
+
+router.get('/show', userController.show)
 
 // Métodos POST 
 
